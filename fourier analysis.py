@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 
-# Fetch data (60 days, hourly)
+#(60 days, hourly)
 url = "https://api.coingecko.com/api/v3/coins/bitcoin/market_chart"
 params = {
     "vs_currency": "usd",
@@ -16,16 +16,15 @@ prices = data['prices']
 df = pd.DataFrame(prices, columns=['timestamp', 'price'])
 df['timestamp'] = pd.to_datetime(df['timestamp'], unit='ms')
 
-# 1. Extract price and ensure uniform sampling
 prices = df['price'].values
 N = len(prices)  # Number of data points
 T = 1.0  # Sampling interval in hours (CoinGecko hourly data)
 
-# 2. Compute FFT
+#fast fourier transform
 fft_vals = np.fft.fft(prices)
 fft_freq = np.fft.fftfreq(N, d=T)
 
-# 3. Take magnitude (power spectrum)
+#magnitude
 power = np.abs(fft_vals)
 
 # 4. Only plot positive frequencies (real signal symmetry)
@@ -65,4 +64,5 @@ plt.ylabel('Magnitude')
 plt.grid(True)
 
 plt.tight_layout()
+
 plt.show()
